@@ -1,0 +1,29 @@
+/* CleanDoc Minimal Toast */
+.cleandoc-trim-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border-left: 3px solid #10b981;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.2s ease-out;
+}
+
+.cleandoc-trim-toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clean Copy</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="header">
+    <div class="brand">
+      <img src="icons/icon32.png" alt="Clean Copy Icon" class="logo">
+      <div class="brand-text">
+        <span class="title">Clean Copy</span>
+        <span class="subtitle">Auto-Trim Ending Space & Newlines</span>
+      </div>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="enabled">
+      <span class="slider round"></span>
+    </label>
+  </div>
+
+  <div id="status-card" class="status-card active">
+    <div class="status-dot"></div>
+    <span id="status-text">Active: Trimming ending spaces on copy</span>
+  </div>
+
+  <div class="options-list">
+    <label class="option-item">
+      <span>Show notification toast on copy</span>
+      <input type="checkbox" id="showToast">
+    </label>
+  </div>
+
+  <div class="section-title">Quick Test</div>
+  <div class="test-box">
+    <input type="text" id="test-input" value="Test text with ending space   " spellcheck="false">
+    <div class="test-hint">Select the text above, press <kbd>Ctrl+C</kbd>, then paste to test!</div>
+  </div>
+
+  <div class="footer">
+    <span>Ready for Google Docs & Web</span>
+    <span class="version">v1.1.0</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
