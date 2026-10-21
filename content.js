@@ -1,5 +1,5 @@
 /**
- * CleanDoc Content Script (Isolated World)
+ * Clean Copy Content Script (Isolated World)
  * Manages storage settings, cross-frame notifications, and visual feedback toast.
  */
 
@@ -14,6 +14,7 @@
 
   function syncConfigToPage() {
     try {
+      window.postMessage({ type: 'CLEANCOPY_CONFIG', enabled }, '*');
       window.postMessage({ type: 'CLEANDOC_CONFIG', enabled }, '*');
     } catch (e) {}
   }
@@ -40,9 +41,9 @@
   // Inject toast styles directly in top frame
   if (isTopFrame) {
     const styleEl = document.createElement('style');
-    styleEl.id = 'cleandoc-toast-style';
+    styleEl.id = 'cleancopy-toast-style';
     styleEl.textContent = `
-      .cleandoc-trim-toast {
+      .cleandoc-trim-toast, .cleancopy-trim-toast {
         position: fixed !important;
         bottom: 24px !important;
         right: 24px !important;
@@ -65,7 +66,7 @@
         transform: translateY(12px) !important;
         transition: all 0.2s ease-out !important;
       }
-      .cleandoc-trim-toast.visible {
+      .cleandoc-trim-toast.visible, .cleancopy-trim-toast.visible {
         opacity: 1 !important;
         transform: translateY(0) !important;
       }
@@ -82,6 +83,7 @@
 
     if (!isTopFrame) {
       try {
+        window.top.postMessage({ type: 'CLEANCOPY_FORWARD_TOAST', message: msg }, '*');
         window.top.postMessage({ type: 'CLEANDOC_FORWARD_TOAST', message: msg }, '*');
       } catch (e) {}
       return;
@@ -89,7 +91,7 @@
 
     if (!toastEl) {
       toastEl = document.createElement('div');
-      toastEl.className = 'cleandoc-trim-toast';
+      toastEl.className = 'cleancopy-trim-toast';
       document.documentElement.appendChild(toastEl);
     }
 
@@ -103,14 +105,17 @@
   }
 
   // Listen to trimmed event from main world interceptor
+  window.addEventListener('cleancopy-trimmed-notify', () => {
+    displayToast('Trimmed ending space & newline');
+  });
   window.addEventListener('cleandoc-trimmed-notify', () => {
     displayToast('Trimmed ending space & newline');
   });
 
-  // Top frame receives forwarded toast from subframes (Google Docs editing iframe)
+  // Top frame receives forwarded toast from subframes (Google Docs or Wix Editor iframes)
   if (isTopFrame) {
     window.addEventListener('message', (e) => {
-      if (e.data && e.data.type === 'CLEANDOC_FORWARD_TOAST') {
+      if (e.data && (e.data.type === 'CLEANCOPY_FORWARD_TOAST' || e.data.type === 'CLEANDOC_FORWARD_TOAST')) {
         displayToast(e.data.message || 'Trimmed ending space & newline');
       }
     });

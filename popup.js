@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (textToCopy && e.clipboardData) {
-      const trimmed = textToCopy.replace(/[\s\u00A0]+$/, '');
+      const trimmed = textToCopy.replace(/[\s\u00A0\u2000-\u200B\u2028\u2029]+$/, '');
       if (trimmed !== textToCopy) {
         e.clipboardData.setData('text/plain', trimmed);
         e.preventDefault();
