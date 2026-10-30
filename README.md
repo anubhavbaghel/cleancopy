@@ -15,7 +15,8 @@ When you copy text from Google Docs or web pages:
 
 **Clean Copy** solves this seamlessly and invisibly:
 - Synchronously intercepts both copy (`setData`) and paste (`getData`) pipelines.
-- Strips trailing whitespace, newlines (`\r\n`, `\n`), tabs, non-breaking spaces (`\u00A0`), and zero-width spaces (`\u200B`).
+- Strips trailing whitespace, newlines (`\r\n`, `\n`), tabs, non-breaking spaces (`\u00A0`), and zero-width spaces (`\u200B`) **only at the end** of copied content.
+- Preserves all intentional spaces, words, and punctuation in between sentences.
 - Sanitizes rich-text HTML: automatically converts single-paragraph blocks (`<p>`, `<div>`) into inline spans so **Wix Editor FAQ & CMS** fields paste cleanly inline without jumping to the next line.
 - Intercepts native browser copy and paste events across all standard web pages and inputs.
 - **Zero lag, zero permissions prompt, 100% native.**

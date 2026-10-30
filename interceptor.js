@@ -61,16 +61,18 @@
     // 1. Remove trailing whitespace/newlines outside tags at the end of the string
     cleaned = cleaned.replace(/[\s\u00A0\u2000-\u200B\u2028\u2029]+$/, '');
 
-    // 2. Remove trailing empty block elements like <p><br></p>, <div><br></div>, <p></p>, <div></div>, <br>
+    // 2. Remove trailing empty elements or trailing <br> at the end
     let prev;
     do {
       prev = cleaned;
-      cleaned = cleaned.replace(/(?:<p[^>]*>\s*(?:<br\s*\/?>)?\s*<\/p>|<div[^>]*>\s*(?:<br\s*\/?>)?\s*<\/div>|<br\s*\/?>)[\s\u00A0]*$/i, '');
-      cleaned = cleaned.replace(/[\s\u00A0]+(<\/(?:p|div|span|b|i|strong|em|body|html)>)$/i, '$1');
+      cleaned = cleaned.replace(/(?:<p[^>]*>\s*(?:<br\s*\/?>)?\s*<\/p>|<div[^>]*>\s*(?:<br\s*\/?>)?\s*<\/div>|<span[^>]*>\s*(?:<br\s*\/?>)?\s*<\/span>|<br\s*\/?>)[\s\u00A0]*$/i, '');
     } while (cleaned !== prev);
 
-    // 3. Remove trailing whitespace, &nbsp;, <br> before closing inline or block tags
-    cleaned = cleaned.replace(/(?:[\s\u00A0\u2000-\u200B\u2028\u2029]|&nbsp;|<br\s*\/?>)+(<\/(?:span|p|div|b|i|strong|em|a|td|th|li|h[1-6]|label|code|pre)>)/gi, '$1');
+    // 3. Remove trailing whitespace, &nbsp;, <br> ONLY at the end of the content
+    // Uses lookahead to match only trailing spaces/breaks before final closing tags
+    // at the very end of the HTML structure.
+    // Spaces between sentences or words (e.g. "...sentence. </span><span>...") are strictly preserved!
+    cleaned = cleaned.replace(/(?:[\s\u00A0\u2000-\u200B\u2028\u2029]|&nbsp;|<br\s*\/?>)+(?=(?:\s*<\/\s*[a-z0-9]+\s*>)*\s*$)/gi, '');
 
     // 4. Special handling for single-block copies (e.g. single paragraph/line from Google Docs):
     // In rich text editors like Wix FAQ & CMS (Draft.js), <p>, <div>, and <h1-6> cause the editor to create
